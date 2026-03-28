@@ -57,12 +57,17 @@ btnMusic.addEventListener('click', () => {
     }
 });
 
-// MOBILE TOUCH SCROLL SNAP
-// CSS scroll-snap tidak reliable di mobile Safari/Android, gunakan JS sebagai fallback
+// MOBILE TOUCH SCROLL SNAP — Sekali Pakai Per Section
+// Snap hanya aktif ketika menuju section yang BELUM pernah dikunjungi.
+// Section yang sudah dikunjungi: scroll bebas tanpa snap.
 const snapSections = Array.from(document.querySelectorAll('section, footer'));
 let touchStartY = 0;
 let snapCurrentIndex = 0;
 let isSnapping = false;
+
+// Lacak section mana yang sudah pernah di-snap (dikunjungi)
+// Section pertama (index 0 = Hero) langsung dianggap sudah dikunjungi
+const visitedSections = new Set([0]);
 
 function isMobileDevice() {
     return window.innerWidth <= 900;
@@ -72,6 +77,8 @@ function snapToSection(index) {
     if (index < 0 || index >= snapSections.length) return;
     snapCurrentIndex = index;
     isSnapping = true;
+    // Tandai section ini sudah dikunjungi setelah di-snap
+    visitedSections.add(index);
     snapSections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => { isSnapping = false; }, 900);
 }
@@ -83,12 +90,24 @@ document.addEventListener('touchstart', (e) => {
 document.addEventListener('touchend', (e) => {
     if (!isMobileDevice() || isSnapping) return;
     const diff = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(diff) < 40) return; // ignore tiny swipes
+    if (Math.abs(diff) < 40) return; // abaikan swipe kecil
 
     if (diff > 0) {
-        snapToSection(snapCurrentIndex + 1); // swipe up → next
+        // Swipe ke atas → maju ke section berikutnya
+        const nextIndex = snapCurrentIndex + 1;
+        if (nextIndex >= snapSections.length) return;
+
+        if (!visitedSections.has(nextIndex)) {
+            // Belum pernah dikunjungi → SNAP aktif
+            snapToSection(nextIndex);
+        } else {
+            // Sudah dikunjungi → scroll bebas, cukup update index
+            snapCurrentIndex = nextIndex;
+        }
     } else {
-        snapToSection(snapCurrentIndex - 1); // swipe down → prev
+        // Swipe ke bawah → mundur, selalu bebas (sudah pasti pernah dikunjungi)
+        const prevIndex = snapCurrentIndex - 1;
+        if (prevIndex >= 0) snapCurrentIndex = prevIndex;
     }
 }, { passive: true });
 
