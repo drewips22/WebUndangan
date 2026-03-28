@@ -43,12 +43,14 @@
 
     <!-- Music Control -->
     <div id="music-control" class="hidden">
-        <button id="btn-music" class="music-btn playing">
-            <i class="bi bi-disc"></i>
-        </button>
-        <!-- Ganti src dengan file mp3 sesungguhnya jika ada -->
+        <div class="music-panel">
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.05" value="0.7" title="Volume">
+            <button id="btn-music" class="music-btn playing">
+                <i class="bi bi-disc"></i>
+            </button>
+        </div>
         <audio id="bg-music" loop>
-            <source src="assets/audio/song.ogg" type="audio/ogg">
+            <source src="assets/audio/song.mp3" type="audio/mp3">
         </audio>
     </div>
 
@@ -62,12 +64,12 @@
             <div class="hero-content" data-aos="zoom-in" data-aos-duration="2000">
                 <p class="subtitle">Kami mengundang Anda ke pernikahan kami</p>
                 <h1 class="main-title">Andrew <br>&amp;<br> Alya</h1>
-                <div class="divider-gold"></div>
-                <p class="hero-date">22 . 02 . -</p>
-                <div class="scroll-down">
-                    <p>Scroll untuk lanjut</p>
-                    <i class="bi bi-chevron-down blink"></i>
-                </div>
+                <div class="divider-gold mx-auto"></div>
+                <p class="hero-date">22 . 02 . 2029</p>
+            </div>
+            <div class="scroll-down">
+                <p>Scroll untuk lanjut</p>
+                <i class="bi bi-chevron-down blink"></i>
             </div>
         </section>
 
@@ -148,7 +150,8 @@
                 <div class="events-grid mt-5">
                     <!-- Akad -->
                     <div class="event-card glass-panel" data-aos="fade-up" data-aos-delay="100">
-                        <div class="img-wrap-event"><img src="assets/images/akad.png" alt="Akad Nikah" class="event-img"></div>
+                        <div class="img-wrap-event"><img src="assets/images/akad.png" alt="Akad Nikah"
+                                class="event-img"></div>
                         <h3>Akad Nikah</h3>
                         <p class="date">Tanggal: Kamis, 22 Februari 2029</p>
                         <p class="time">Waktu: 08.00 - 10.00 WIB</p>
@@ -159,7 +162,8 @@
 
                     <!-- Resepsi -->
                     <div class="event-card glass-panel" data-aos="fade-up" data-aos-delay="200">
-                        <div class="img-wrap-event"><img src="assets/images/resepsi.png" alt="Resepsi" class="event-img"></div>
+                        <div class="img-wrap-event"><img src="assets/images/resepsi.png" alt="Resepsi"
+                                class="event-img"></div>
                         <h3>Resepsi</h3>
                         <p class="date">Tanggal: Kamis, 22 Februari 2029</p>
                         <p class="time">Waktu: 11.00 - 14.00 WIB</p>
@@ -249,7 +253,8 @@
                         <h4>Konfirmasi Kehadiran</h4>
                         <form id="form-rsvp" name="Form Undangan">
                             <div class="form-group mt-3">
-                                <input type="text" id="rsvp-nama" name="Nama" class="input-form" placeholder="Nama Anda" required>
+                                <input type="text" id="rsvp-nama" name="Nama" class="input-form" placeholder="Nama Anda"
+                                    required>
                             </div>
                             <div class="form-group mt-3">
                                 <select id="rsvp-status" name="Kehadiran" class="input-form" required>
@@ -268,7 +273,8 @@
                                 <textarea id="rsvp-ucapan" name="Ucapan" class="input-form text-area" rows="4"
                                     placeholder="Berikan ucapan atau doa restu" required></textarea>
                             </div>
-                            <button type="submit" id="btn-submit-rsvp" class="btn-primary mt-4 w-100">Kirim Ucapan</button>
+                            <button type="submit" id="btn-submit-rsvp" class="btn-primary mt-4 w-100">Kirim
+                                Ucapan</button>
                         </form>
                     </div>
 

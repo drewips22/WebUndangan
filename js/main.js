@@ -13,31 +13,31 @@ const body = document.body;
 const btnMusic = document.getElementById('btn-music');
 const bgMusic = document.getElementById('bg-music');
 const musicControl = document.getElementById('music-control');
+const volumeSlider = document.getElementById('volume-slider');
 let isMusicPlaying = false;
+
+// Set volume awal
+bgMusic.volume = 0.7;
+
+// Volume slider control
+volumeSlider.addEventListener('input', () => {
+    bgMusic.volume = volumeSlider.value;
+});
 
 // Event ketika tombol Buka Undangan ditekan
 btnOpen.addEventListener('click', () => {
-    // Jalankan animasi slide up dan fade out
     coverOverlay.classList.add('slide-up');
-
-    // Buka kunci scroll
     body.classList.remove('locked');
-
-    // Tampilkan konten utama
     mainContent.classList.add('show');
-
-    // Tampilkan kontrol musik
     musicControl.classList.remove('hidden');
 
-    // Mulai musik (Peringatan: Beberapa browser memerlukan interaksi user yg kami tangani disini, 
-    // namun jika tidak ada file, tangkap errornya)
     try {
         bgMusic.play().then(() => {
             isMusicPlaying = true;
         }).catch(err => {
             console.log("Audio playback failed atau source tidak ditemukan: ", err);
             btnMusic.classList.remove('playing');
-            btnMusic.innerHTML = '<i class="bi bi-disc"></i>'; // pause icon state later
+            btnMusic.innerHTML = '<i class="bi bi-disc"></i>';
         });
     } catch (e) {
         console.error("Audio error: ", e);
@@ -56,6 +56,41 @@ btnMusic.addEventListener('click', () => {
         isMusicPlaying = true;
     }
 });
+
+// MOBILE TOUCH SCROLL SNAP
+// CSS scroll-snap tidak reliable di mobile Safari/Android, gunakan JS sebagai fallback
+const snapSections = Array.from(document.querySelectorAll('section, footer'));
+let touchStartY = 0;
+let snapCurrentIndex = 0;
+let isSnapping = false;
+
+function isMobileDevice() {
+    return window.innerWidth <= 900;
+}
+
+function snapToSection(index) {
+    if (index < 0 || index >= snapSections.length) return;
+    snapCurrentIndex = index;
+    isSnapping = true;
+    snapSections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => { isSnapping = false; }, 900);
+}
+
+document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+    if (!isMobileDevice() || isSnapping) return;
+    const diff = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(diff) < 40) return; // ignore tiny swipes
+
+    if (diff > 0) {
+        snapToSection(snapCurrentIndex + 1); // swipe up → next
+    } else {
+        snapToSection(snapCurrentIndex - 1); // swipe down → prev
+    }
+}, { passive: true });
 
 // COUNTDOWN TIMER
 // Tanggal target: 22 Feb 2029 (08:00 WIB)
